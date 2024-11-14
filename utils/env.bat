@@ -1,0 +1,3 @@
+@echo off
+rem @echo Adding WTL Include dir...
+@set Include=%1\wtl75_5002\Include;%Include%

@@ -1,0 +1,190 @@
+# nMakefile, revision $Revision: 9 $
+
+#config target
+OUTDIR=output
+!IF DEFINED(DEBUG)
+EXENAME=gryff-dbg
+!ELSE
+EXENAME=gryff
+!ENDIF
+
+LIBGRFVER=1.2.0.2
+
+# command processor programs
+MAKE	=	nmake -nologo
+CC	=	cl -nologo
+CXX	=	cl -nologo
+RC	=	rc /r
+AR	=	lib -nologo
+LD	=	link -nologo
+RM	=       del /q
+MKDIR	=	md
+CP	=	copy /y
+
+####################### Compiler related options. #######################
+#
+COMMON_DEFS =	-D_CRT_SECURE_NO_DEPRECATE -DSTRICT -DWIN32 -D_UNICODE -DUNICODE
+OPTFLAGS =	-EHsc -W3 -Wp64 -FD -GR -Zc:forScope,wchar_t
+INCL	=	-I..\include
+
+!IF DEFINED(DEBUG)
+OPTFLAGS =	$(OPTFLAGS) -Od
+!ELSE
+OPTFLAGS =	$(OPTFLAGS) -Ox
+!ENDIF
+
+CXXFLAGS =	$(OPTFLAGS) $(COMMON_DEFS) $(INCL)
+LIBS	=	kernel32.lib user32.lib gdi32.lib msimg32.lib shell32.lib advapi32.lib ole32.lib oleaut32.lib uuid.lib shlwapi.lib comdlg32.lib comctl32.lib urlmon.lib
+LDFLAGS	=	/incremental:no /machine:I386 /subsystem:windows,5.0 /entry:wWinMainCRTStartup
+RCFLAGS	=	/dWIN32 /dUNICODE /d_UNICODE
+
+#uncomment next to put error messages in a file
+#ERRFILE= >> ..\errs_$(EXENAME).log
+
+
+# project specific
+# use multithreaded dll
+CFLAGS_RELEASE=-MD -Gs -GS -DNDEBUG
+LDFLAGS_RELEASE=/debug atls.lib
+CFLAGS_DEBUG=-MDd -RTCsu -D_DEBUG -Zi
+LDFLAGS_DEBUG=/debug atlsd.lib
+
+CXXFLAGS=$(CXXFLAGS) /wd4290 /I /Fp"$(OUTDIR)/$(EXENAME).pch" /Fd"$(OUTDIR)/$(EXENAME).pdb"
+CXXFLAGS=$(CXXFLAGS) /D_WIN32_WINNT=0x0500 /U_WTL_USE_CSTRING /D_WTL_NO_CSTRING /D_WTL_NO_WTYPES /D_ATL_STATIC_REGISTRY /D_ATL_CSTRING_EXPLICIT_CONSTRUCTORS
+
+!IF DEFINED(DEBUG)
+CXXFLAGS=$(CXXFLAGS) $(CFLAGS_DEBUG)
+!ELSE
+CXXFLAGS=$(CXXFLAGS) $(CFLAGS_RELEASE)
+!ENDIF
+PCH_CREATE=/Yc"stdwtl.h"
+PCH_USE=/Yu"stdwtl.h"
+
+LDFLAGS=$(LDFLAGS) /LIBPATH:..\lib /OPT:REF,NOWIN98
+LDFLAGS=$(LDFLAGS) zlib.lib grf-priv-$(LIBGRFVER).lib
+!IF DEFINED(DEBUG)
+LDFLAGS=$(LDFLAGS) $(LDFLAGS_DEBUG)
+!ELSE
+LDFLAGS=$(LDFLAGS) $(LDFLAGS_RELEASE)
+!ENDIF
+
+################################################################################################
+#           list of object files
+
+OBJ_OUT = .
+S = .
+
+# no PCH
+_PAK_OBJS	=	"$(OBJ_OUT)\CAbstractGrfPacker.obj" \
+			"$(OBJ_OUT)\CWinApiFileIoManager.obj" \
+			"$(OBJ_OUT)\utf16.obj"
+
+_UTIL_OBJS	=	"$(OBJ_OUT)\fnmanip.obj" \
+			"$(OBJ_OUT)\gen_grfio.obj" \
+			"$(OBJ_OUT)\imglist.obj" \
+			"$(OBJ_OUT)\ole_impl.obj"
+
+OBJ	=	$(_PAK_OBJS) \
+		$(_UTIL_OBJS) \
+		"$(OBJ_OUT)\MyListCtrl.obj" \
+		"$(OBJ_OUT)\MyTreeCtrl.obj" \
+		"$(OBJ_OUT)\MyPaneCont.obj" \
+		"$(OBJ_OUT)\DlgAbout.obj" \
+		"$(OBJ_OUT)\DocGrf.obj" \
+		"$(OBJ_OUT)\VwGrf.obj" \
+		"$(OBJ_OUT)\FrmGrf.obj" \
+		"$(OBJ_OUT)\ProgBar.obj" \
+		"$(OBJ_OUT)\WndMain.obj" \
+		"$(OBJ_OUT)\gryff.obj"
+
+RES = "$(OBJ_OUT)\gryff.res"
+
+################################################################################################
+# build target
+ALL : PCH "$(OUTDIR)/$(EXENAME).exe"
+	
+
+# for cleaning up
+
+clean:
+	-$(RM) *.obj *.res $(OUTDIR)\*.idb $(OUTDIR)\*.ilk *.pch 2> NUL
+
+RELINK : REMOVEEXE ALL
+
+REMOVEEXE :
+	-$(RM) "$(OUTDIR)\$(EXENAME).exe" 2> NUL
+
+
+#Warning: These dependencies may not be up to date
+
+### Building the precompiled header file
+
+PCH : stdwtl.obj
+	
+$(S)\stdwtl.obj: stdwtl.cpp stdwtl.h
+	$(CXX) $(CXXFLAGS) $(PCH_CREATE) -c $*.cpp $(ERRFILE)
+
+
+### pak library
+S_PAK =../include/rasqual/
+
+{$(S_PAK)}.cpp{$(OBJ_OUT)}.obj::
+	$(CXX) $(CXXFLAGS) -c $< $(ERRFILE)
+
+#CAbstractGrfPacker.obj :
+#   $(CPP) $(CPPFLAGS) /c ../include/rasqual/CAbstractGrfPacker.cpp
+
+#CWinApiFileIoManager.obj :
+#   $(CPP) $(CPPFLAGS) /c ../include/rasqual/CWinApiFileIoManager.cpp
+
+#utf16.obj :
+#   $(CPP) $(CPPFLAGS) /c ../include/rasqual/utf16.cpp
+
+# inference rule for other source files
+{$(S)}.cpp{$(OBJ_OUT)}.obj::
+	$(CXX) $(CXXFLAGS) $(PCH_USE) -c $< $(ERRFILE)
+
+{$(S)}.rc{$(S)}.res::
+	$(RC) $(RCFLAGS) $< $(ERRFILE)
+
+### util code
+
+fnmanip.obj : fnmanip.cpp fnmanip.h
+
+gen_grfio.obj : gen_grfio.cpp gen_grfio.h fnmanip.h
+
+imglist.obj : imglist.cpp imglist.h
+
+ole_impl.obj : ole_impl.cpp ole_impl.h
+
+### gryff program
+# source/target file dependencies
+
+MyListCtrl.obj : MyListCtrl.cpp MyListCtrl.h ProcComm.h StringTraits.h imglist.h resource.h
+
+MyTreeCtrl.obj : MyTreeCtrl.cpp MyTreeCtrl.h fnmanip.h imglist.h resource.h
+
+MyPaneCont.obj : MyPaneCont.cpp MyPaneCont.h
+
+DlgAbout.obj : DlgAbout.cpp DlgAbout.h resource.h
+
+DocGrf.obj : DocGrf.cpp DocGrf.h DocGrfControl.h GrfDesc.h StringTraits.h DlgInvalidEntries.h fnmanip.h gen_grfio.h resource.h
+
+VwGrf.obj : VwGrf.cpp VwGrf.h MyPaneCont.h MyTreeCtrl.h MyListCtrl.h FrmGrf.h DocGrf.h DocGrfControl.h GrfDesc.h StringTraits.h ProcComm.h fnmanip.h imglist.h ole_impl.h resource.h
+
+FrmGrf.obj : FrmGrf.cpp FrmGrf.h MyTreeCtrl.h MyListCtrl.h fnmanip.h DocGrf.h DocGrfControl.h GrfDesc.h StringTraits.h VwGrf.h DlgInvalidEntries.h DlgProgress.h commoncontrols.h ProcComm.h gen_grfio.h imglist.h resource.h
+
+ProgBar.obj : ProgBar.cpp ProgBar.h resource.h
+
+WndMain.obj : WndMain.cpp WndMain.h ProcComm.h DlgAbout.h ProgBar.h imglist.h resource.h
+
+gryff.obj : gryff.cpp imglist.h WndMain.h resource.h
+
+gryff.res : gryff.rc resource.h
+
+
+
+# linkage
+
+"$(OUTDIR)/$(EXENAME).exe" : $(PCH) $(OBJ) $(RES)
+    $(LD) $(LDFLAGS) /out:$@ $** $(LIBS) $(ERRFILE)

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
+	<assemblyIdentity name="ASB.Rasqual.Gryff" processorArchitecture="*" version="1.0.0.0" type="win32" />
+	<description>
+		Gryff - Grf Management Utility
+	</description>
+	<dependency>
+		<dependentAssembly>
+			<assemblyIdentity
+				type="win32"
+				name="Microsoft.Windows.Common-Controls"
+				version="6.0.0.0"
+				publicKeyToken="6595b64144ccf1df"
+				language="*"
+				processorArchitecture="*"
+			/>
+		</dependentAssembly>
+	</dependency>
+<!--	<dependency>
+		<dependentAssembly>
+			<assemblyIdentity
+				type="win32"
+				name="Microsoft.Tools.VisualCPlusPlus.Runtime-Libraries"
+				version="7.10.3052.4"
+				processorArchitecture="*"
+				language="*"
+			/>
+		</dependentAssembly>
+	</dependency>
+-->
+</assembly>

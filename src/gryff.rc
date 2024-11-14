@@ -1,0 +1,788 @@
+// $Id: gryff.rc 12 2005-08-14 01:42:51Z Rasqual $
+
+// *
+// *   gryff, a GRF archive management utility, src/gryff.rc
+// *   Copyright (C) 2003-2005 Rasqual Twilight
+// *
+// *   This program is distributed in the hope that it will be useful,
+// *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+// *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+// *
+
+// * gryff.rc
+// * Resources
+// *
+// *@author $Author: Rasqual $
+// *@version $Revision: 12 $
+// *
+
+#include "windows.h"
+#include "atlres.h"
+#include "resource.h"
+#include "richedit.h"
+
+/////////////////////////////////////////////////////////////////////////////
+// Neutral resources
+
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+#pragma code_page(1252)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+1 VERSIONINFO
+ FILEVERSION 1,1,0,1
+ PRODUCTVERSION 1,1,0,1
+ FILEFLAGSMASK 0x8L
+#ifdef _DEBUG
+ FILEFLAGS 0x9L
+#else
+ FILEFLAGS 0x8L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "000004b0"
+        BEGIN
+            VALUE "Comments", "gryff is a Windows GUI program supporting the Ragnarok Online (tm) archive format, Grf version 1 and 2. This software is released under the terms of the GNU GPL version 2 or higher. Sourcecode should have been made available when distributing, otherwise please go to http://gryff.clownphobia.com/"
+            VALUE "CompanyName", "Rasqual Twilight"
+            VALUE "FileDescription", "gryff 1.1 SVN"
+            VALUE "FileVersion", "1, 1, 0, 1"
+            VALUE "InternalName", "gryff"
+            VALUE "LegalCopyright", "Copyright 2003-2005 (c) Rasqual Twilight (http://gryff.clownphobia.com/)"
+            VALUE "LegalTrademarks", "Gryff"
+            VALUE "OriginalFilename", "gryff.exe"
+            VALUE "PrivateBuild", "1"
+            VALUE "ProductName", "gryff.exe"
+            VALUE "ProductVersion", "1, 1, 0, 1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x0, 1200
+    END
+END
+
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_SMALL               ICON                    "res\\gryff.ico"
+IDC_GRYFF               ICON                    "res\\gryff.ico"
+IDC_GRYFFCHILD          ICON                    "res\\grfarc.ico"
+IDI_OPENFOLDER          ICON                    "res\\ro-ico15.ico"
+IDI_CLOSEDFOLDER        ICON                    "res\\ro-ico16.ico"
+IDI_FILEICON            ICON                    "res\\fileicon.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Toolbar
+//
+
+IDC_GRYFF TOOLBAR  16, 16
+BEGIN
+    BUTTON      IDM_FILE_NEW
+    BUTTON      IDM_FILE_NEW_FROM_GRF
+    BUTTON      IDM_FILE_OPEN
+    BUTTON      IDM_FILE_SAVE
+    SEPARATOR
+    BUTTON      IDM_EDIT_ADD_FILES
+    BUTTON      IDM_EDIT_ADD_DIRECTORY
+    SEPARATOR
+    BUTTON      IDM_HELP_ABOUT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDC_GRYFF               BITMAP                  "res\\Toolbar.bmp"
+IDM_FILE_NEW_FROM_GRF   BITMAP                  "res\\newimport32.bmp"
+IDM_FILE_CLOSE          BITMAP                  "res\\closedoc32.bmp"
+IDM_EDIT_ADD_FILES      BITMAP                  "res\\addfile32.bmp"
+IDM_EDIT_ADD_DIRECTORY  BITMAP                  "res\\addfolder32.bmp"
+IDM_FILE_SAVE           BITMAP                  "res\\savedoc32.bmp"
+
+// Bitmaps with RGB(192,192,192) as transparency color key
+IDM_EDIT_ADD_FILES__24      BITMAP              "res\\addfile24.bmp"
+IDM_EDIT_ADD_DIRECTORY__24  BITMAP              "res\\addfolder24.bmp"
+IDM_FILE_SAVE__24           BITMAP              "res\\savedoc24.bmp"
+
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Legalese
+//
+
+IDR_VIRUS               LEGALESE   DISCARDABLE  "res\\license.bin"
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+// DO NOT TRANSLATE MENUS. Please use the separate .txt files.
+
+IDC_GRYFF MENU
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&New\tCtrl+N",                 IDM_FILE_NEW
+        MENUITEM "New &from GPF/GRF...",         IDM_FILE_NEW_FROM_GRF
+        MENUITEM "&Open...\tCtrl+O",             IDM_FILE_OPEN
+        MENUITEM "&Close\tCtrl+F4",              IDM_FILE_CLOSE
+        MENUITEM "Close Ot&her\tCtrl+Alt+F4",
+                                                IDM_FILE_CLOSE_ALL_BUT_CURRENT
+
+        MENUITEM "&Save\tCtrl+S",                IDM_FILE_SAVE
+        MENUITEM "Save &As...\tF12",             IDM_FILE_SAVE_AS
+        MENUITEM "Save &All\tCtrl+Shift+S",      IDM_FILE_SAVE_ALL
+//        MENUITEM SEPARATOR
+//        POPUP "&Export"
+//        BEGIN
+//            MENUITEM "Plain Text List",             IDM_FILE__EXPORT_PLAINTEXT
+//            MENUITEM "Old Style Grf",               IDM_FILE__EXPORT_OLDSTYLEGRF
+//        END
+        MENUITEM SEPARATOR
+        MENUITEM "(Recent Files)",              ID_FILE_MRU_FILE1, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       IDM_FILE_EXIT
+    END
+    POPUP "&Edit"
+    BEGIN
+        MENUITEM "&Open\tEnter",                 IDM_EDIT_OPEN
+        MENUITEM "E&xtract\tCtrl+Enter",         IDM_EDIT_EXTRACT
+        MENUITEM SEPARATOR
+//        MENUITEM "&Undo\tCtrl+Z",               IDM_EDIT_UNDO
+//        MENUITEM SEPARATOR
+//        MENUITEM "Cu&t\tCtrl+X",                IDM_EDIT_CUT
+//        MENUITEM "&Copy\tCtrl+C",               IDM_EDIT_COPY
+//        MENUITEM "&Paste\tCtrl+V",              IDM_EDIT_PASTE
+//        MENUITEM SEPARATOR
+        MENUITEM "&Rename\tF2",                  IDM_EDIT_RENAME
+        MENUITEM "&Delete\tDel",                 IDM_EDIT_DELETE
+        MENUITEM SEPARATOR
+        MENUITEM "&New Folder\tIns",                  IDM_EDIT_NEW_FOLDER
+        MENUITEM SEPARATOR
+        MENUITEM "Add &File(s)...\tCtrl+I",           IDM_EDIT_ADD_FILES
+        MENUITEM "&Add Directory...\tCtrl+D",      IDM_EDIT_ADD_DIRECTORY
+//        MENUITEM "Add from &Plain List...",      IDM_EDIT_ADD_FROM_LIST
+        MENUITEM SEPARATOR
+        MENUITEM "&Merge with GPF/GRF...",       IDM_EDIT_MERGE_WITH_GRF
+//        MENUITEM "Merge from Patch &List",       IDM_EDIT_MERGE_FROM_PATCH_LIST
+//        MENUITEM SEPARATOR
+//        MENUITEM "&Select All\tCtrl+A",         IDM_EDIT_SELECT_ALL
+    END
+    POPUP "&View"
+    BEGIN
+        MENUITEM "Grf Explorer &Pane",           IDM_VIEW_GRF_EXPLORER_PANE
+        MENUITEM SEPARATOR
+//        MENUITEM "&Tile",                        IDM_VIEW_TYPE_TILE
+//        MENUITEM "&Icons",                       IDM_VIEW_TYPE_ICONS
+        MENUITEM "&List",                        IDM_VIEW_TYPE_LIST
+        MENUITEM "&Details",                     IDM_VIEW_TYPE_DETAILS
+//        MENUITEM SEPARATOR
+//        POPUP "&Sort Icons By"
+//        BEGIN
+//            MENUITEM "&Name",                    IDM_VIEW__SORT_NAME
+//            MENUITEM "&Origin",                  IDM_VIEW__SORT_ORIGIN
+//            MENUITEM "&File Extension",          IDM_VIEW__SORT_EXT
+//            MENUITEM "&Compressed File Size",    IDM_VIEW__SORT_COMPSIZE
+//            MENUITEM "&Expanded File Size",      IDM_VIEW__SORT_EXPSIZE
+        MENUITEM SEPARATOR
+        MENUITEM "&Refresh\tF5",                 IDM_VIEW_REFRESH
+    END
+//    POPUP "&Tools"
+//    BEGIN
+//        MENUITEM "&Extract specific...",        IDM_TOOLS_EXTRACT_SPECIFIC
+//        MENUITEM "Com&pare...",                  IDM_TOOLS_COMPARE, GRAYED
+//        MENUITEM SEPARATOR
+//        MENUITEM "&Options...",                 IDM_TOOLS_OPTIONS
+//        MENUITEM "&Customize...\tCtrl+K",       IDM_TOOLS_CUSTOMIZE
+//    END
+    POPUP "&Window"
+    BEGIN
+//        MENUITEM "Additional &View",            IDM_WINDOW_NEW
+        MENUITEM "Close &Other",
+                                                IDM_WINDOW_CLOSE_ALL_BUT_CURRENT
+        MENUITEM SEPARATOR
+        MENUITEM "&Cascade",                    IDM_WINDOW_CASCADE
+        MENUITEM "&Tile",                       IDM_WINDOW_TILE_HORZ
+        MENUITEM "&Arrange Icons",              IDM_WINDOW_ARRANGE
+    END
+    POPUP "&Help"
+    BEGIN
+//        MENUITEM "Contents",                    IDM_HELP_CONTENTS
+//        MENUITEM "F.*.Q.",                      IDM_HELP_FAQ
+//        MENUITEM SEPARATOR
+        POPUP "Online contents"
+        BEGIN
+            MENUITEM "Tutorial...",                 IDM_HELP__ONLINE_TUTORIAL
+//
+//            MENUITEM "Support page",                IDM_HELP__ONLINE_SUPPORT
+//            MENUITEM "Donate",                      IDM_FILE__ONLINE_DONATE
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "&About...",                   IDM_HELP_ABOUT
+    END
+END
+
+IDR_LISTVIEW_CTXT MENU  // shown on listview BG context menu
+BEGIN
+    POPUP "Context_no_translate"
+    BEGIN
+//        MENUITEM "&Paste\tCtrl+V",              IDM_EDIT_PASTE
+//        MENUITEM SEPARATOR
+        MENUITEM "&New Folder\tIns",                  IDM_EDIT_NEW_FOLDER
+        MENUITEM SEPARATOR
+        MENUITEM "Add &File(s)\tCtrl+I",           IDM_EDIT_ADD_FILES
+        MENUITEM "Add &Directory\tCtrl+D",      IDM_EDIT_ADD_DIRECTORY
+//        MENUITEM "Add from &Plain List",      IDM_EDIT_ADD_FROM_LIST
+        MENUITEM SEPARATOR
+        MENUITEM "&Merge GPF/GRF here",       IDM_EDIT_MERGE_WITH_GRF
+//        MENUITEM "Merge from Patch &List",       IDM_EDIT_MERGE_FROM_PATCH_LIST
+        MENUITEM SEPARATOR
+        MENUITEM "&Refresh\tF5",                 IDM_VIEW_REFRESH
+//        MENUITEM SEPARATOR
+//        MENUITEM "Proper&ties...",          IDM_EDIT_PROPERTIES
+    END
+END
+
+IDR_LISTVIEW_ITEM_CTXT MENU  // shown on listview item(s) context menu
+BEGIN
+    POPUP "Context_no_translate"
+    BEGIN
+        MENUITEM "&Open\tEnter",                 IDM_EDIT_OPEN
+        MENUITEM "E&xtract\tCtrl+Enter",         IDM_EDIT_EXTRACT
+        MENUITEM SEPARATOR
+//        MENUITEM "Cu&t\tCtrl+X",                IDM_EDIT_CUT
+//        MENUITEM "&Copy\tCtrl+C",               IDM_EDIT_COPY
+//        MENUITEM "&Paste\tCtrl+V",              IDM_EDIT_PASTE // enabled Only if single selection folder
+//        MENUITEM SEPARATOR
+        MENUITEM "&Rename\tF2",                  IDM_EDIT_RENAME
+        MENUITEM "&Delete\tDel",                 IDM_EDIT_DELETE
+//        MENUITEM SEPARATOR
+//        MENUITEM "Proper&ties...",               IDM_EDIT_PROPERTIES
+    END
+END
+
+IDR_TREEVIEW_CTXT MENU
+BEGIN
+    POPUP "Context_no_translate"
+    BEGIN
+        MENUITEM "&Open\tEnter",                 IDM_EDIT_OPEN
+        MENUITEM "E&xtract\tCtrl+Enter",         IDM_EDIT_EXTRACT
+        MENUITEM SEPARATOR
+        MENUITEM "&Close\tCtrl+F4",              IDM_FILE_CLOSE
+        MENUITEM "Close Ot&her\tCtrl+Alt+F4",
+                                                IDM_FILE_CLOSE_ALL_BUT_CURRENT
+        MENUITEM SEPARATOR
+        MENUITEM "&Save\tCtrl+S",                IDM_FILE_SAVE
+        MENUITEM "Save &As...\tF12",             IDM_FILE_SAVE_AS
+        MENUITEM SEPARATOR
+        MENUITEM "&Refresh\tF5",                 IDM_VIEW_REFRESH
+//////        MENUITEM SEPARATOR
+//////        MENUITEM "&Document Properties...",       IDM_FILE_DOC_PROPERTIES
+    END
+END
+
+IDR_TREEVIEW_ITEM_CTXT MENU
+BEGIN
+    POPUP "Context_no_translate"
+    BEGIN
+        MENUITEM "&Open\tEnter",                 IDM_EDIT_OPEN
+        MENUITEM "E&xtract\tCtrl+Enter",         IDM_EDIT_EXTRACT
+        MENUITEM SEPARATOR
+//////        MENUITEM "&Paste\tCtrl+V",              IDM_EDIT_PASTE
+//////        MENUITEM SEPARATOR
+        MENUITEM "&Rename\tF2",                  IDM_EDIT_RENAME
+        MENUITEM "&Delete\tDel",                 IDM_EDIT_DELETE
+//////        MENUITEM SEPARATOR
+//////        MENUITEM "Proper&ties...",               IDM_EDIT_PROPERTIES
+    END
+END
+
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDC_GRYFF ACCELERATORS
+BEGIN
+    VK_F2,          IDM_EDIT_RENAME,        NOINVERT, VIRTKEY
+	VK_F4,          IDM_FILE_CLOSE,         NOINVERT, CONTROL, VIRTKEY
+	VK_F5,          IDM_VIEW_REFRESH,       NOINVERT, VIRTKEY
+    VK_F12,         IDM_FILE_SAVE_AS,       NOINVERT, VIRTKEY
+
+	"D",           IDM_EDIT_ADD_DIRECTORY,          NOINVERT, CONTROL, VIRTKEY
+	"I",           IDM_EDIT_ADD_FILES,          NOINVERT, CONTROL, VIRTKEY
+	"N",           IDM_FILE_NEW,          NOINVERT, CONTROL, VIRTKEY
+	"O",           IDM_FILE_OPEN,          NOINVERT, CONTROL, VIRTKEY
+	"S",           IDM_FILE_SAVE,          NOINVERT, CONTROL, VIRTKEY
+	"S",           IDM_FILE_SAVE_ALL,          NOINVERT, CONTROL, SHIFT, VIRTKEY
+END
+
+
+IDC_GRYFF_ACCEL_EX ACCELERATORS
+BEGIN
+    VK_INSERT,         IDM_EDIT_NEW_FOLDER,       NOINVERT, VIRTKEY
+    VK_DELETE,         IDM_EDIT_DELETE,       NOINVERT, VIRTKEY
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_WELCOME DIALOGEX  0, 0, 420, 250
+STYLE DS_SHELLFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "GNU General Public License"
+FONT 8, "MS Shell Dlg 2", 0, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,187,229,50,14
+    LTEXT           "Please read the license agreement below in its entirely.  It describes the only conditions under which you may redistribute and modify VirtualDub, and that this program comes with no warranty.",
+                    IDC_STATIC,7,7,406,19
+    EDITTEXT        IDC_LICENSE,7,29,406,194,ES_MULTILINE | ES_AUTOVSCROLL |
+                    ES_AUTOHSCROLL | ES_READONLY | WS_VSCROLL | WS_HSCROLL
+END
+
+
+IDD_ABOUTBOX DIALOGEX 22, 17, 343, 180
+STYLE DS_SHELLFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_CAPTION | WS_SYSMENU
+      | WS_THICKFRAME  // For resizing
+CAPTION "About Gryff"
+FONT 8, "MS Shell Dlg 2", 0, 0, 0x1
+BEGIN
+    ICON            IDC_GRYFF,1234,14,9,21,20
+    LTEXT           "Gryff Version 1.1 SVN (Pre-release version)",IDC_STATIC,49,10,224,8,SS_NOPREFIX
+    LTEXT           "This program is free software.",
+                    IDC_STATIC,49,23,224,8
+    LTEXT           "Copyright (c) 2003-2005 Rasqual Twilight.",IDC_STATIC,49,
+                    34,224,8
+    LTEXT           "This software contains third party code :",IDC_STATIC,
+                    49,47,224,8,SS_NOPREFIX
+    CONTROL         "",IDC_ABOUT_CREDITS,RICHEDIT_CLASS,ES_MULTILINE |
+                    ES_AUTOVSCROLL | ES_READONLY,49,56,293,111,
+                    WS_EX_STATICEDGE
+    DEFPUSHBUTTON   "OK",IDOK,291,6,51,16
+END
+
+
+
+IDD_EXPORT_INVALID_ENTRIES DIALOGEX 0, 0, 342, 166
+STYLE DS_SHELLFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION |
+    WS_SYSMENU
+CAPTION "Warning"
+FONT 8, "MS Shell Dlg 2", 0, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,109,144,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,181,144,50,14
+    LTEXT           "The following entries cannot be converted to valid filenames. They are either too long, or the charset does not correspond to Korean.\nClick Cancel to abort operation, or OK to proceed and continue without these entries.",
+                    IDC_STATIC,7,7,328,30,0,WS_EX_STATICEDGE
+    EDITTEXT        IDC_EDIT_EXPORT_INVALID_ENTRIES_LIST,7,43,328,94,
+                    ES_MULTILINE | WS_HSCROLL | WS_VSCROLL | ES_READONLY
+END
+
+
+IDD_OFN_ENCODING DIALOGEX 0, 0, 200, 40
+STYLE DS_SHELLFONT | DS_CONTROL | WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS
+FONT 8, "MS Shell Dlg 2", 0, 0, 0x1
+BEGIN
+    CONTROL         "Use &CP-949 encoding (""ASCII filenames"")",IDC_OFN_ENABLE_CONV,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,7,179,13
+END
+
+IDD_PROGRESS DIALOGEX 0, 0, 189, 55
+STYLE DS_SHELLFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION |
+    WS_SYSMENU
+CAPTION "Gryff operation in progress..."
+FONT 8, "MS Shell Dlg 2", 0, 0, 0x1
+BEGIN
+    CONTROL         "Processing",IDC_PROGRESS_STATIC,"Static",SS_LEFTNOWORDWRAP | WS_GROUP,
+                    8,8,173,13
+    CONTROL         "",IDC_PROGRESS_CAPTION,"Static",SS_LEFTNOWORDWRAP | WS_GROUP,8,18,173,
+                    13
+    CONTROL         "",IDC_PROGRESS_CONTROL,"msctls_progress32",WS_BORDER | 0x1,5,33,126,14
+    PUSHBUTTON      "Cancel",2,136,33,50,14
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDC_GRYFF               "Gryff 1.1 SVN"
+    IDS_PANE_TITLE          "Grf Explorer"
+    IDC_GRYFFCHILD          "Grf Document"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_APP_TITLE           "Gryff"
+	IDS_ABOUT_CREDITS       "<span style='font-size:8'>+ <span style='color:#ff0000;'>libgrf</span> by the <b>OpenKore</b>(<a href='http://openkore.sourceforge.net/'>^</a>) contributors.<br>\r+ <span style='color:#ff0000'>zlib library (<a href='http://zlib.net/'>^</a>) routines</span> written by <b>Jean-loup Gailly and Mark Adler</b>.<br>\r+ Uses a modified version of '<span style='color:#e0e0e0;background-color:#101070'>CSimpleHtmlCtrl &nbsp;- A RTF-based HTML Viewer</span>' (<a href='http://www.viksoe.dk/code/rtfstatic.htm'>^</a>) and '<span style='color:#0000ff'>atlgdix.h</span>' (<a href='http://www.viksoe.dk/code/atlgdix.htm'>^</a>) wrapper classes, copyright (c) 2003, 2001-2002 <b>Bjarke Viksoe</b>.<br>\r+ <span style='color:#0000ff'>CFileDialogFilter</span> (<a href='http://www.codeproject.com/wtl/wtlfilterstring.asp'>^</a>) and <span style='color:#0000ff'>CURL</span> (<a href='http://www.codeproject.com/internet/urlnewwindow.asp'>^</a>) by <b>Robert Edward Caldecott</b>.<br>\r+ Thanks to <b>Gabriel Kniznik</b> for his brilliant <a href='http://www.argsoft.com/Wtl/DocView.html'>article on implementing the MDI architecture with WTL</a>.<br>\r+ Ragnarok icons designed by <b>Rose Besch</b>, aka bara-chan.<br><br>\r<u>Finally, thanks to the <a href='http://wtl.sourceforge.net/'>WTL</a> authors &amp; contributors.</u> Greetings to the <a href='http://forum.asb-sakray.net'>ASB</a> admins who always try their best at keeping the community forums online.</span><br><br><br><div style='font-size:8'>Hidden link: <a href='http://gryff.clownphobia.com/?act=gryff'>Official site</a></div>"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_LVC_NAME            "Name"
+    IDS_LVC_SIZE            "Size"
+    IDS_LVC_PACKEDSIZE      "Packed"
+    IDS_LVC_PACKRATIO       "Ratio"
+    IDS_LVC_TYPE            "Type"
+    IDS_LVC_ORIGIN          "Origin"
+    IDS_LVC_RESOURCENAME    "Resource Name"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_OPENDOC_EMPTY_FAIL   "Failed to create empty document\n - Error code %d %s"
+    IDS_OPENDOC_LOAD_FAIL    "Failed to load document '%s' - Error code %d %s\n\nHold [Ctrl] to ignore subsequent messages."
+    IDS_LIBGRF_UNKNOWN_ERROR "Unknown error."
+    IDS_LIBGRF_LIBRARY_ERROR "Error reported by libgrf"
+    IDS_LIBGRF_LIBRARY_FAILURE "Error in libgrf"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_GRFORIGIN_FOLDER    "Directory"
+    IDS_GRFORIGIN_GRF       "GRF Archive"
+    IDS_GRFORIGIN_FS        "Filesystem"
+    IDS_GRFORIGIN_OTF       "On-the-fly"
+END
+
+// item text
+
+
+STRINGTABLE
+BEGIN
+    IDS_MENU_FILE           "&File"
+    IDS_MENU_EDIT           "&Edit"
+    IDS_MENU_VIEW           "&View"
+    IDS_MENU_TOOLS          "&Tools"
+    IDS_MENU_WINDOW         "&Window"
+    IDS_MENU_HELP           "&Help"
+END
+
+STRINGTABLE
+BEGIN
+    IDM_FILE_NEW            "New\tCtrl+N"
+    IDM_FILE_NEW_FROM_GRF   "New from GPF/GRF..."
+    IDM_FILE_OPEN           "Open...\tCtrl+O"
+    IDM_FILE_CLOSE          "Close\tCtrl+F4"
+    IDM_FILE_CLOSE_ALL_BUT_CURRENT  "Close Other\tCtrl+Alt+F4"
+    IDM_FILE_SAVE           "Save\tCtrl+S"
+    IDM_FILE_SAVE_AS        "Save As...\tF12"
+    IDM_FILE_SAVE_ALL       "Save All\tCtrl+Shift+S"
+    IDM_FILE__EXPORT        "Export"
+    IDM_FILE__EXPORT_PLAINTEXT    "Plain Text List"
+    IDM_FILE__EXPORT_OLDSTYLEGRF  "Old Style Grf"
+    IDM_FILE_MRU_FILE       "(Recent Files)"
+    IDM_FILE_EXIT           "E&xit"
+END
+
+STRINGTABLE
+BEGIN
+    IDM_EDIT_OPEN           "&Open\tEnter"
+    IDM_EDIT_EXTRACT        "E&xtract\tCtrl+Enter"
+    IDM_EDIT_UNDO           "&Undo\tCtrl+Z"
+    IDM_EDIT_CUT            "Cu&t\tCtrl+X"
+    IDM_EDIT_COPY           "&Copy\tCtrl+C"
+    IDM_EDIT_PASTE          "&Paste\tCtrl+V"
+    IDM_EDIT_RENAME         "Rename\tF2"
+    IDM_EDIT_DELETE         "Delete\tDel"
+    IDM_EDIT_NEW_FOLDER     "New Folder\tIns"
+    IDM_EDIT_ADD_FILES      "Add File(s)...\tCtrl+I"
+    IDM_EDIT_ADD_DIRECTORY  "Add Directory...\tCtrl+D"
+    IDM_EDIT_ADD_FROM_LIST  "Add from Plain List..."
+    IDM_EDIT_MERGE_WITH_GRF  "Merge with GPF/GRF..."
+    IDM_EDIT_MERGE_FROM_PATCH_LIST  "Merge from patch list"
+    IDM_EDIT_SELECT_ALL     "Select &All\tCtrl+A"
+END
+
+STRINGTABLE
+BEGIN
+    IDM_VIEW_GRF_EXPLORER_PANE  "Grf Explorer Pane"
+    IDM_VIEW_TYPE_TILE      "Tile"
+    IDM_VIEW_TYPE_ICONS     "Icons"
+    IDM_VIEW_TYPE_LIST      "List"
+    IDM_VIEW_TYPE_DETAILS   "Details"
+    IDM_VIEW__SORT          "Sort Icons By"
+    IDM_VIEW__SORT_NAME     "Name"
+    IDM_VIEW__SORT_ORIGIN   "Origin"
+    IDM_VIEW__SORT_EXT      "File Extension"
+    IDM_VIEW__SORT_COMPSIZE  "Compressed File Size"
+    IDM_VIEW__SORT_EXPSIZE  "Expanded File Size"
+    IDM_VIEW_REFRESH        "Refresh\tF5"
+END
+
+STRINGTABLE
+BEGIN
+    IDM_TOOLS_EXTRACT_SPECIFIC  "&Extract specific..."
+    IDM_TOOLS_COMPARE           "Compare..."
+    IDM_TOOLS_OPTIONS           "&Options..."
+    IDM_TOOLS_CUSTOMIZE         "&Customize...\tCtrl+K"
+END
+
+STRINGTABLE
+BEGIN
+    IDM_WINDOW_NEW          "Additional &View"
+    IDM_WINDOW_CLOSE_ALL_BUT_CURRENT  "Close Other"
+    IDM_WINDOW_CASCADE      "&Cascade"
+    IDM_WINDOW_TILE_HORZ    "&Tile"
+    IDM_WINDOW_ARRANGE      "&Arrange Icons"
+END
+
+STRINGTABLE
+BEGIN
+    IDM_HELP_CONTENTS       "Contents"
+    IDM_HELP_FAQ            "F.*.Q."
+    IDM_HELP__ONLINE        "Online contents"
+    IDM_HELP__ONLINE_TUTORIAL  "Tutorial"
+    IDM_HELP__ONLINE_SUPPORT   "Support page"
+    IDM_FILE__ONLINE_DONATE    "Donate"
+    IDM_HELP_ABOUT          "&About..."
+END
+
+// item caption
+
+
+STRINGTABLE
+BEGIN
+    IDS_FILE_NEW            "Creates a blank document."
+    IDS_FILE_NEW_FROM_GRF   "Creates a new document based on an existing one."
+    IDS_FILE_OPEN           "Opens an existing document."
+    IDS_FILE_CLOSE          "Closes the view of the active document."
+    IDS_FILE_CLOSE_ALL_BUT_CURRENT  "Closes all frames not pointing to the active document."
+    IDS_FILE_SAVE           "Saves the active document."
+    IDS_FILE_SAVE_AS        "Saves the active document with a new name."
+    IDS_FILE_SAVE_ALL       "Saves all modified documents."
+
+    IDS_FILE__EXPORT_PLAINTEXT    "Exports the active document listing as Plain Text."
+    IDS_FILE__EXPORT_OLDSTYLEGRF  "Exports the active document in the Old Style Grf format"
+
+    IDS_FILE_EXIT           "Leaves the application, prompting for save of modified documents."
+END
+
+STRINGTABLE
+BEGIN
+    IDS_EDIT_OPEN           "Open this file in the shell, or browse to folder."
+    IDS_EDIT_EXTRACT        "Extracts selection to a specific folder."
+    IDS_EDIT_UNDO           "Undo the last action."
+    IDS_EDIT_CUT            "Cut the selection to the Clipboard."
+    IDS_EDIT_COPY           "Copy the selection to the Clipboard."
+    IDS_EDIT_PASTE          "Paste the selection to the Clipboard."
+    IDS_EDIT_RENAME         "Renames the selection."
+    IDS_EDIT_DELETE         "Deletes the selection."
+    IDS_EDIT_NEW_FOLDER     "Creates a new folder in the current directory."
+    IDS_EDIT_ADD_FILES      "Adds one or several files from disk to the current directory."
+    IDS_EDIT_ADD_DIRECTORY  "Adds the contents of a directory to the current directory."
+    IDS_EDIT_ADD_FROM_LIST  "Adds files from disk to the current directory according to a listing."
+    IDS_EDIT_MERGE_WITH_GRF  "Adds the contents of an existing GPF/GRF document to the current directory."
+    IDS_EDIT_MERGE_FROM_PATCH_LIST  "Adds the contents of one or several documents to the current directory according to a patch list."
+    IDS_EDIT_SELECT_ALL     "Selects all items in the current directory."
+END
+
+STRINGTABLE
+BEGIN
+    IDS_VIEW_GRF_EXPLORER_PANE  "Toggles the treeview pane"
+    IDS_VIEW_TYPE_TILE      "Displays elements using a tile."
+    IDS_VIEW_TYPE_ICONS     "Displays elements using icons."
+    IDS_VIEW_TYPE_LIST      "Displays elements using a list."
+    IDS_VIEW_TYPE_DETAILS   "Displays elements using details."
+
+    IDS_VIEW__SORT_NAME     "Sort elements by name."
+    IDS_VIEW__SORT_ORIGIN   "Sort elements by origin."
+    IDS_VIEW__SORT_EXT      "Sort elements by file extension."
+    IDS_VIEW__SORT_COMPSIZE  "Sort elements by compressed file size."
+    IDS_VIEW__SORT_EXPSIZE  "Sort elements by expanded file size."
+    IDS_VIEW_REFRESH        "Refresh the contents of the page."
+END
+
+STRINGTABLE
+BEGIN
+    IDS_TOOLS_EXTRACT_SPECIFIC  "Extracts one or several elements."
+    IDS_TOOLS_COMPARE           "Compares the active document with another one."
+    IDS_TOOLS_OPTIONS           "Allows to modify application parameters."
+    IDS_TOOLS_CUSTOMIZE         "Allows to customize appearance."
+END
+
+STRINGTABLE
+BEGIN
+    IDS_WINDOW_NEW          "Creates a new view of the active document."
+    IDS_WINDOW_CLOSE_ALL_BUT_CURRENT  "Closes all frames except the active window."
+    IDS_WINDOW_CASCADE      "Cascade windows."
+    IDS_WINDOW_TILE_HORZ    "Tile windows."
+    IDS_WINDOW_ARRANGE      "Arrange minimized windows."
+END
+
+STRINGTABLE
+BEGIN
+    IDS_HELP_CONTENTS       "Shows the Help index."
+    IDS_HELP_FAQ            "Frequently asked questions and troubleshooting."
+
+    IDS_HELP__ONLINE_TUTORIAL  "Opens the online tutorial."
+    IDS_HELP__ONLINE_SUPPORT   "Opens the online support page for the software."
+    IDS_FILE__ONLINE_DONATE    "Donate page for Gryff."
+    IDS_HELP_ABOUT          "Displays program info, version number and copyright."
+END
+
+STRINGTABLE
+BEGIN
+    IDS_REDO                "&Redo"
+    IDS_UNDO                "&Undo"
+    IDS_CUT                 "Cu&t"
+    IDS_COPY                "&Copy"
+    IDS_PASTE               "&Paste"
+    IDS_DELETE              "&Delete"
+    IDS_SELECTALL           "Select &All"
+    IDS_OPEN_URL            "Open in &New Window"
+    IDS_COPY_URL            "&Copy To Clipboard"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_FILTER_ALL_FILES    "All Files"
+    IDS_FILTER_GRF_FILES    "Grf Archives (*.grf;*.gpf)"
+
+//    IDS_FILTER_SPR_FILES    "Sprite Files (*.spr)"
+//    IDS_FILTER_ACT_FILES    "Sprite Descriptors (*.act)"
+//    IDS_FILTER_IMF_FILES    "IMF files (*.imf)"
+//    IDS_FILTER_FNA_FILES    "FNA resource files (*.fna)"
+    IDS_FILTER_ANIM_MULTIFILES  "Sprite Animations spr,act,imf,fna"
+
+//    IDS_FILTER_RSW_FILES    "World Resource Files (*.rsw)"
+//	IDS_FILTER_GND_FILES    "Map Ground Files (*.gnd)"
+//	IDS_FILTER_GAT_FILES    "GAT Height Maps (*.gat)"
+    IDS_FILTER_MAP_MULTIFILES  "Map Description Data rsw,gnd,gat"
+
+//    IDS_FILTER_RSM_FILES    "Resource Models (*.rsm)"
+//    IDS_FILTER_RSX_FILES    "RSX Resource Files (*.rsx)"
+//    IDS_FILTER_GR2_FILES    "Granny2 Models (*.gr2)"
+    IDS_FILTER_MODELS_MULTIFILES  "3d Models rsm,rsx,gr2"
+
+END
+
+STRINGTABLE
+BEGIN
+//    IDS_FILTER_TXT_FILES    "Text Files (*.txt)"
+//    IDS_FILTER_XML_FILES    "XML Files (*.xml)"
+    IDS_FILTER_CFG_MULTIFILES  "Configuration Files txt,xml"
+
+//    IDS_FILTER_BMP_FILES    "Bitmap images (*.bmp)"
+//    IDS_FILTER_JPG_FILES    "JPEG images (*.jpg)"
+//    IDS_FILTER_TGA_FILES    "Targa textures (*.tga)"
+//    IDS_FILTER_STR_FILES    "Animation Clips (*.str)"
+//    IDS_FILTER_PAL_FILES    "Palettes (*.pal)"
+    IDS_FILTER_GFX_MULTIFILES  "Graphic files bmp,jpg,tga,str,pal"
+
+//    IDS_FILTER_WAV_FILES    "Wave sounds (*.wav)"
+//    IDS_FILTER_MP3_FILES    "Mp3 sounds (*.mp3)"
+//    IDS_FILTER_BNK_FILES    "Bink videos (*.bik)"
+    IDS_FILTER_SND_MULTIFILES  "Sound files wav,mp3,bik"
+
+	IDS_FILTER_ALL_MULTIFILES "All recognized extensions"
+END
+
+STRINGTABLE
+BEGIN
+	IDS_UNTITLED_NAME                "Untitled"
+	IDS_NEW_FOLDER_NAME              "New folder"
+	IDS_CANNOT_RENAME_DUPLICATE      "Unable to rename %s : A file with this name already exists. Please specify another name."
+	IDS_DELETE_CONFIRMATION_PROMPT   "Are you sure you want to delete %s?"
+	IDS_DELETE_MULTI_CONFIRMATION_PROMPT   "Are you sure you want to delete these %d items?"
+	IDS_MODIFIED_SAVE_PROMPT         "Save changes to %s?"
+	IDS_CANNOT_CREATE_TEMPFILE       "Failed to create a temporary file in the destination folder. Please check if there is enough space."
+	IDS_CANNOT_CREATE_DIRECTORY      "Failed to create directory."
+	IDS_MOUNT_LOCATION               "Select the items to include at mount point ""%s"""
+	IDS_USE_CONV_PROMPT              "Would you like to use conversion of CP-949 filenames into Unicode?\n(The so-called ""ASCII filenames"")\nIf you click No, Gryff will assume all filenames are properly encoded in Unicode."
+END
+
+STRINGTABLE
+BEGIN
+	IDS_PACKING_GRF                  "Gryff : Packing archive"
+	IDS_PACKING_GRF_ENTRY            "Packing entry :"
+END
+
+STRINGTABLE
+BEGIN
+	IDS_SPR_TYPE_DESC                "SPR Sprite File"
+	IDS_ACT_TYPE_DESC                "ACT Sprite Descriptors"
+	IDS_IMF_TYPE_DESC                "IMF File"
+	IDS_FNA_TYPE_DESC                "FNA Resource File"
+	IDS_RSW_TYPE_DESC                "RSW World Resource"
+	IDS_GND_TYPE_DESC                "GND Map Ground File"
+	IDS_GAT_TYPE_DESC                "GAT Height Map"
+	IDS_RSM_TYPE_DESC                "RSM Model Resource"
+	IDS_RSX_TYPE_DESC                "RSX Resource File"
+	IDS_GR2_TYPE_DESC                "GR2 Granny2 Model"
+END
+
+STRINGTABLE
+BEGIN
+	IDS_TXT_TYPE_DESC                "TXT Text File"
+	IDS_XML_TYPE_DESC                "XML File"
+	IDS_BMP_TYPE_DESC                "BMP Bitmap Image"
+	IDS_JPG_TYPE_DESC                "JPG JPEG Image"
+	IDS_TGA_TYPE_DESC                "TGA Targa Texture"
+	IDS_STR_TYPE_DESC                "STR Animation Clip"
+	IDS_PAL_TYPE_DESC                "PAL Color Palette"
+	IDS_WAV_TYPE_DESC                "WAV Wave Sound"
+	IDS_MP3_TYPE_DESC                "MP3 Mp3 Sound"
+	IDS_BNK_TYPE_DESC                "BNK Bink Video"
+END
+
+
+
+
+
+STRINGTABLE
+BEGIN
+	IDS_INIT_ERROR_MSGBOX_TITLE      "Gryff Initialization Failed"
+	IDS_DOC_ERROR_MSGBOX_TITLE       "Gryff Document Creation Error"
+	IDS_DELETE_WARNING_MSGBOX_TITLE  "Deletion confirmation prompt"
+END
+
+STRINGTABLE
+BEGIN
+	IDS_INIT_ERROR_COINIT_FAILED     "Failed to initialize COM.\nCoInitialize() failed."
+	IDS_INIT_ERROR_INITCC_FAILED     "Failed to initialize common controls."
+	IDS_INIT_ERROR_MODULE_FAILED     "Failed to initialize ATL CAppModule.\nInit() failed."
+	IDS_INIT_ERROR_IMGLIST_FAILED    "Failed to load image list.\nCreateImageList() result is %d."
+	IDS_INIT_ERROR_MSGLOOP_FAILED    "Failed to add the message loop to the application module."
+	IDS_INIT_ERROR_CREATE_MAIN_WINDOW_FAILED  "Failed to create the main window."
+	IDS_INIT_WARNING_CODEPAGE_NOT_INSTALLED    "Korean codepage is not installed on your system.\n\nPlease install the East-Asian support via the Regional Options applet in the Control Panel."
+END
+
+STRINGTABLE
+BEGIN
+	IDS_APPLICATION_REGISTRY_KEY     "Software\\Aegis Support Boarders\\Rasqual Twilight\\Gryff"
+END
+
+// RT_MANIFEST
+//
+1                   RT_MANIFEST             "res\\manifest.xml"
+
+/////////////////////////////////////////////////////////////////////////////
+
+

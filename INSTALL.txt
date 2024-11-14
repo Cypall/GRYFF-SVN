@@ -1,0 +1,50 @@
+// $Id: INSTALL.txt 36 2005-05-10 20:36:16Z Rasqual $
+// *
+// *   gryff, a GRF archive management utility, AUTHORS.txt
+// *   Copyright (C) 2003, 2004, 2005 Rasqual Twilight
+// *
+// *   This program is distributed in the hope that it will be useful,
+// *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+// *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+// *
+
+gryff - GRF archive management utility
+======================================
+
+Copyright © 2003-2005 Rasqual Twilight, All rights reserved.
+http://gryff.ragnarok-online.info/?act=gryff
+Not affiliated with Gravity, Inc.
+
+Build requirements
+------------------
+Microsft Visual C++ .NET 2002, 2003, or later [with ATL]
+WTL 7.x  (http://wtl.sourceforge.net) - Latest is recommended.
+optional: libgrf dll (http://gryff.ragnarok-online.info/?act=grfdll or,
+  more generic, http://openkore.sourceforge.net/grftool/ )
+  The provided DLL was built against MSVCRT 7.1
+optional: zlib (http://zlib.net/) is built as a static lib against MSVCRT 7.1
+
+Patching
+--------
+gryff uses a modified version of the WTL::CFileDialogImpl class, which
+is defined in <atldlgs.h>; a patch has been provided in the utils/ directory.
+It comes with no warranty of correctness; also, the program may compile
+without patching, by replacing all occurences of CFileDialogImpl<T, true>
+to CFileDialogImpl<T>.
+However, you won't be able to see the places sidebar in the common
+open file dialog.
+* Another patch has been issued to fix a crash occuring when you close
+a background MDI child frame. The bug lies in the definition of 
+WTL::CCommandBarCtrlImpl::OnCreate in <atlctrlw.h>; a patch has been provided
+as well. A supplemental resource describing the problem is this post
+(http://groups.yahoo.com/group/wtl/message/10639) on the WTL mailing list.
+
+Instructions
+------------
+Open the Solution workspace into the Visual Studio IDE.
+Add the WTL include dir to your list of include directories.
+Select the configuration (Debug or Release).
+Build the project.
+The resulting executable is placed in src/output.
+You may copy it anywhere and associate the .grf and .gpf extensions
+to this program.

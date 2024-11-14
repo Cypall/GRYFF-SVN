@@ -1,0 +1,141 @@
+// $Id: IFileIoManager 9 2005-08-12 17:33:08Z Rasqual $
+//Copyright (c) 2004 Rasqual Twilight
+
+#if !defined(__IFILEIOMANAGER__)
+#define __IFILEIOMANAGER__
+
+#if defined(WIN32)
+# include <windows.h>
+  typedef INT64 int64_t;
+#else             // !defined(WIN32)
+# include <stdint.h>
+#endif            // defined(WIN32)
+
+//#include  <openkore/libgrf>
+#include  "grfexceptions.h"
+#include  "utf16.h"
+
+/**
+	Interface for classes implementing the FileIoManager strategy.
+	Requested operations are:
+	 . AcquireOpenWrite()
+	 . Seek()
+	 . WriteBytes()
+	 . ForceClose()
+**/
+class IFileIoManager
+{
+public:
+	enum
+	{
+		FPTR_MODE_MIN_ = 0U,
+		FPTR_SET = 0U,
+		FPTR_CUR = 1U,
+		FPTR_END = 2U,
+		FPTR_MODE_MAX_ = 2U
+	};
+public:
+	IFileIoManager() {}
+	virtual ~IFileIoManager() {}
+
+public:
+	/**
+		Opens a file descriptor using the Resource Acquisition Is Initialization paradigm.
+		(The resource shall be freed in the destructor or, upon request, in ForceClose())
+		utf16le_encoded_filepath is supposed to be a valid UTF16-LE character sequence.
+		If a file is already open, it is closed. However, since such an operation might raise
+		a GPIoException, it is advised to ForceClose() first.
+
+		Throws: GPIoException if the file cannot be opened or, if a file is already opened,
+		  closing the current file failed. The errno class member designates a error code
+		  set by the implementing class.
+		Throws: GPUnlogicalException if utf16le_encoded_filepath already exists and is not
+		  or does not point to a regular file.
+		Throws: GPUnsupportedOperationException if unable to open a file with such a name
+	**/
+	virtual void AcquireOpenWrite(const UTF16_t utf16le_encoded_filepath[])
+	  throw ( GPNullPointerException, GPInvalidSequenceException, GPIoException, GPUnlogicalException, GPUnsupportedOperationException ) = 0;
+
+	/**
+		Opens a file descriptor using the Resource Acquisition Is Initialization paradigm.
+		(The resource shall be freed in the destructor or, upon request, in ForceClose())
+		utf16le_encoded_filepath is supposed to be a valid UTF16-LE character sequence.
+		If a file is already open, it is closed. However, since such an operation might raise
+		a GPIoException, it is advised to ForceClose() first.
+
+		Throws: GPIoException if the file cannot be opened or, if a file is already opened,
+		  closing the current file failed. The errno class member designates a error code
+		  set by the implementing class.
+		Throws: GPUnlogicalException if utf16le_encoded_filepath already exists and is not
+		  or does not point to a regular file.
+		Throws: GPUnsupportedOperationException if unable to open a file with such a name
+	**/
+	virtual void AcquireOpenRead(const UTF16_t utf16le_encoded_filepath[])
+	  throw ( GPNullPointerException, GPInvalidSequenceException, GPIoException, GPUnlogicalException, GPUnsupportedOperationException ) = 0;
+
+	/**
+		Sets the file pointer by adding offset bytes (which can be negative) to
+		the specified position whence. whence can either be FPTR_SET, FPTR_CUR,
+		or FPTR_END to indicate respectively the start of the file, the current
+		position indicator, or end-of-file.
+		To request a file rewind, pass 0 for offset and specify FPTR_SET.
+		To obtain the current file position, pass 0 for offset and specify FPTR_CUR.
+		To obtain the virtual file size, pass 0 for offset and specify FPTR_END.
+		On certain implementations, it is possible to seek beyond the end of the file.
+		If such an operation is attempted while the implementation does not permit it, a
+		GPUnsupportedOperationException is raised.
+
+		Throws: GPUnlogicalException if whence is not a valid value
+		Throws: GPIoException if the file seeking failed. The errno class member
+		  designates a error code set by the implementing class.
+		Throws: GPIllegalStateException if no file is open
+		Throws: GPUnsupportedOperationException tried to seek past the end of file and
+		  not supported by the implementation
+		Returns: the file position after seek has been done.
+	**/
+	virtual	int64_t Seek(const int64_t &offset, int whence)
+	  throw ( GPUnlogicalException, GPIoException, GPIllegalStateException, GPUnsupportedOperationException ) = 0;
+
+	/**
+		Writes len bytes to the currently opened file.
+		If len is 0, the operation succeeds if and only if a file is currently opened.
+
+		Throws: GPInvalidParameterException if data is 0
+		Throws: GPIoException if the write operation failed. The errno class member
+		  designates a error code set by the implementing class.
+		Throws: GPIllegalStateException if no file is opened
+	**/
+	virtual	void WriteBytes(const uint8_t data[], unsigned int len)
+	  throw ( GPInvalidParameterException, GPIoException, GPIllegalStateException ) = 0;
+
+	/**
+		Reads len bytes from the currently opened file.
+		If len is 0, the operation succeeds if and only if a file is currently opened.
+
+		Throws: GPInvalidParameterException if data is 0
+		Throws: GPIoException if the read operation failed. The errno class member
+		  designates a error code set by the implementing class.
+		Throws: GPIllegalStateException if no file is opened
+		Returns: Number of bytes read
+	**/
+	virtual	unsigned int ReadBytes(uint8_t dest[], unsigned int len)
+	  throw ( GPInvalidParameterException, GPIoException, GPIllegalStateException ) = 0;
+
+	/**
+		If a file is currently opened, closes the file descriptor.
+
+		Throws: GPIoException if the file cannot be closed. The errno class member
+		  designates a error code set by the implementing class.
+	**/
+	virtual void ForceClose()
+	  throw ( GPIoException ) = 0;
+
+	/**
+		Moves a file to another name
+	**/
+	static void Move(const UTF16_t strSourceFilePath[], const UTF16_t strDestinationFilePath[])
+	  throw ( GPNullPointerException, GPInvalidSequenceException, GPIoException, GPUnlogicalException );
+
+};
+
+#endif  // !defined(__IFILEIOMANAGER__)

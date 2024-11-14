@@ -1,0 +1,4 @@
+GNU GENERAL PUBLIC LICENSE Version 2
+
+(See copy at root or http://www.gnu.org/licenses/gpl.html)
+

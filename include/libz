@@ -1,0 +1,5 @@
+// $Id$
+namespace zlib
+{
+#include  "zlib.h"
+}

@@ -1,0 +1,45 @@
+// $Id: AUTHORS.txt 36 2005-05-10 20:36:16Z Rasqual $
+// *
+// *   gryff, a GRF archive management utility, AUTHORS.txt
+// *   Copyright (C) 2003, 2004, 2005 Rasqual Twilight
+// *
+// *   This program is distributed in the hope that it will be useful,
+// *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+// *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+// *
+
+gryff - GRF archive management utility
+======================================
+
+Copyright © 2003-2005 Rasqual Twilight, All rights reserved.
+http://gryff.ragnarok-online.info/?act=gryff
+Not affiliated with Gravity, Inc.
+
+Authors, in alphabetical order
+------------------------------
+
+Rasqual  (rasqualtwilight@users.sf.net)
+
+
+Contributors, in alphabetical order
+-----------------------------------
+
+
+Past Authors
+------------
+
+
+Legalese
+--------
+Contains code written by third-parties:
+ * CFileDialogFilter         Robert Edward Caldecott
+ * CURL                      Robert Edward Caldecott
+ * CFromHandle>>             Simon Steele
+ * CSimpleHtmlCtrl           Bjarke Viksoe
+ * libgrf                    the OpenKore community
+ * zlib                      Gailly, J.-P. and Adler, M.
+ * CMultiFileDialog was inspired by a MFC article and code by PJ Arends
+ * "Avoiding Multiple Instances of an Application" concept and sample code by Joseph M. Newcomer
+ * "Implementing the MDI architecture with WTL" concept and sample code by Gabriel Kniznik
+
+Please refer to their respective licenses before reuse or distribution.

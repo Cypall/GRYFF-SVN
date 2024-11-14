@@ -1,0 +1,6 @@
+// $Id: libgrf 36 2005-05-10 20:36:16Z Rasqual $
+#include  <gen_types.h>
+namespace openkore
+{
+#include  "grf.h"
+}

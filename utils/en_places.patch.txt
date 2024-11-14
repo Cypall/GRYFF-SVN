@@ -1,0 +1,56 @@
+--- atldlgs-org.h	Tue May 11 03:59:58 2004
++++ atldlgs.h	Fri Sep 24 15:54:40 2004
+@@ -33,7 +33,7 @@
+ ///////////////////////////////////////////////////////////////////////////////
+ // Classes in this file:
+ //
+-// CFileDialogImpl<T>
++// CFileDialogImpl<T, t_bUseHook>
+ // CFileDialog
+ // CFolderDialogImpl<T>
+ // CFolderDialog
+@@ -82,7 +82,7 @@
+   #endif // !UNICODE
+ #endif // (_WIN32_WINNT >= 0x0500) && !defined(OPENFILENAME_SIZE_VERSION_400)
+ 
+-template <class T>
++template <class T, bool t_bUseHook = false>
+ class ATL_NO_VTABLE CFileDialogImpl : public ATL::CDialogImplBase
+ {
+ public:
+@@ -118,10 +118,11 @@
+ 		m_ofn.lpstrDefExt = lpszDefExt;
+ 		m_ofn.lpstrFileTitle = (LPTSTR)m_szFileTitle;
+ 		m_ofn.nMaxFileTitle = _MAX_FNAME;
++		// using OFN_ENABLEHOOK will disable the Places Bar
+ #ifndef _WIN32_WCE
+-		m_ofn.Flags = dwFlags | OFN_EXPLORER | OFN_ENABLEHOOK | OFN_ENABLESIZING;
++		m_ofn.Flags = dwFlags | OFN_EXPLORER | (t_bUseHook ? OFN_ENABLEHOOK : 0) | OFN_ENABLESIZING;
+ #else // CE specific
+-		m_ofn.Flags = dwFlags | OFN_EXPLORER | OFN_ENABLEHOOK;
++		m_ofn.Flags = dwFlags | OFN_EXPLORER | (t_bUseHook ? OFN_ENABLEHOOK : 0);
+ #endif //!_WIN32_WCE
+ 		m_ofn.lpstrFilter = lpszFilter;
+ #if (_ATL_VER >= 0x0700)
+@@ -129,7 +130,7 @@
+ #else //!(_ATL_VER >= 0x0700)
+ 		m_ofn.hInstance = _Module.GetResourceInstance();
+ #endif //!(_ATL_VER >= 0x0700)
+-		m_ofn.lpfnHook = (LPOFNHOOKPROC)T::StartDialogProc;
++		m_ofn.lpfnHook = (t_bUseHook ? (LPOFNHOOKPROC)T::StartDialogProc : 0);
+ 		m_ofn.hwndOwner = hWndParent;
+ 
+ 		// setup initial file name
+@@ -139,8 +140,11 @@
+ 
+ 	INT_PTR DoModal(HWND hWndParent = ::GetActiveWindow())
+ 	{
+-		ATLASSERT((m_ofn.Flags & OFN_ENABLEHOOK) != 0);
+-		ATLASSERT(m_ofn.lpfnHook != NULL);   // can still be a user hook
++		if(t_bUseHook)
++		{
++			ATLASSERT((m_ofn.Flags & OFN_ENABLEHOOK) != 0);
++			ATLASSERT(m_ofn.lpfnHook != NULL);   // can still be a user hook
++		}
+ 
+ 		ATLASSERT((m_ofn.Flags & OFN_EXPLORER) != 0); 

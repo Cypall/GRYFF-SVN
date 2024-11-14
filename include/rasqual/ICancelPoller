@@ -1,0 +1,15 @@
+// $Id: ICancelPoller 9 2005-08-12 17:33:08Z Rasqual $
+#if !defined(__ICANCELPOLLER__)
+#define __ICANCELPOLLER__
+
+#include  "grfexceptions.h"
+
+class ICancelPoller
+{
+public:
+	// Override and throw GPCancelOperationException to abort current operation
+	virtual void operator()()
+	{
+	}
+};
+#endif  // !defined(__ICANCELPOLLER__)

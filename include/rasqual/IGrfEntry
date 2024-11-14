@@ -1,0 +1,69 @@
+// $Id: IGrfEntry 9 2005-08-12 17:33:08Z Rasqual $
+#if !defined(__IGRFENTRY__)
+#define __IGRFENTRY__
+
+#include  <utility>  // pair
+#include  "grfexceptions.h"
+#include  "ICancelPoller"
+
+class IGrfEntry
+{
+public:
+	/**
+		Defines the possible grf entry types
+	**/
+	enum EntryType
+	{
+		FILE_ENTRY = 1,
+		DIRECTORY_ENTRY = 2,
+		FILE_DELAYLOAD_ENTRY = 5,
+		FILE_COMPRESSED_ENTRY = 9
+	};
+	
+	enum
+	{
+		XNFO_UNCOMP_SIZE = 1,
+		XNFO_COMP_SIZE_RAW = 2,
+		XNFO_ORIG_VERSION = 4
+	};
+
+public:
+	IGrfEntry() {}
+	virtual ~IGrfEntry() {}
+
+public:
+	/**
+		IGrfEntry constructor
+		Creates an entry suitable for insertion into a GrfPacker.
+		korean_oem_grffile_path is a Korean ANSI-OEM encoded file name (Cp949)
+		to be used in the grf. It may either use '/' or '\\' as a directory
+		separator.
+		entry_type specifies what type of entry it is, either file or directory.
+		It seems you are not _required_ to create directory entries before
+		adding files, but for best practice you are advised to do so.
+
+		Throws: GPNullPointerException if korean_oem_grffile_path is 0
+		Throws: GPSizeTooLongException if the specified entry name is too long
+		Throws: GPUnlogicalException if entry_type is not a valid entry type
+	**/
+	IGrfEntry(const char /*korean_oem_grffile_path*/[], int /*entry_type*/)
+	  throw ( GPNullPointerException, GPSizeTooLongException, GPUnlogicalException ) {}
+
+	virtual const char * GetEntryName() const = 0;
+	virtual uint8_t GetOriginalFlags() const = 0;
+	virtual int GetEntryType() const = 0;
+
+	virtual std::pair<const uint8_t*, size_t> GetData(ICancelPoller *)
+	  throw ( GPUnsupportedOperationException, GPCancelOperationException ) = 0;
+
+	virtual unsigned int GetExtendedInfo(int nFlags) const = 0;
+	virtual void SetExtendedInfo(int nFlags, unsigned int value) = 0;
+	
+	/**
+		Tells the entry to unload unnecessary data to save resources
+	**/
+	virtual void Dispose() = 0;
+
+};
+
+#endif  // !defined(__IGRFENTRY__)
